@@ -1,7 +1,5 @@
 -- Create the database
 CREATE DATABASE origin_driving_school_db;
-
--- Use the database
 USE origin_driving_school_db;
 
 -- 1. Students Table
@@ -16,7 +14,17 @@ CREATE TABLE students (
     registration_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Instructors Table
+-- 2. Staff Table (admins, instructors, etc.)
+CREATE TABLE staff (
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,   
+    role VARCHAR(50) NOT NULL,       
+    phone VARCHAR(20)
+);
+
+-- 3. Instructors Table (OPTIONAL – if you really need separate details)
 CREATE TABLE instructors (
     instructor_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -26,7 +34,33 @@ CREATE TABLE instructors (
     status VARCHAR(50)
 );
 
--- 3. Classes Table
+-- 4. Branches Table
+CREATE TABLE branches (
+    branch_id INT AUTO_INCREMENT PRIMARY KEY,
+    branch_name VARCHAR(100) NOT NULL,
+    location VARCHAR(200),
+    contact_number VARCHAR(20)
+);
+
+-- 5. Courses Table
+CREATE TABLE courses (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2),
+    duration INT,
+    description TEXT
+);
+
+-- 6. Fleet Table
+CREATE TABLE fleet (
+    vehicle_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_name VARCHAR(100) NOT NULL,
+    vehicle_model VARCHAR(100),
+    vehicle_type VARCHAR(50),
+    location VARCHAR(255) NOT NULL
+);
+
+-- 7. Classes Table (depends on instructors & fleet)
 CREATE TABLE classes (
     class_id INT AUTO_INCREMENT PRIMARY KEY,
     class_name VARCHAR(100) NOT NULL,
@@ -39,27 +73,23 @@ CREATE TABLE classes (
     FOREIGN KEY (vehicle_id) REFERENCES fleet(vehicle_id) ON DELETE SET NULL
 );
 
--- 4. Branches Table
-CREATE TABLE branches (
-    branch_id INT AUTO_INCREMENT PRIMARY KEY,
-    branch_name VARCHAR(100) NOT NULL,
-    location VARCHAR(200),
-    contact_number VARCHAR(20)
+-- 8. Invoices Table (depends on students, classes, courses)
+CREATE TABLE invoices (
+    invoice_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    class_id INT NULL,             
+    course_id INT NULL,            
+    amount DECIMAL(10, 2) NOT NULL,
+    issue_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    due_date DATETIME,
+    status VARCHAR(50),
+    payment_status ENUM('Pending', 'Paid') DEFAULT 'Pending',
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
--- 5. Scheduling Table
-CREATE TABLE schedules (
-    schedule_id INT AUTO_INCREMENT PRIMARY KEY,
-    class_id INT,
-    student_id INT,
-    instructor_id INT,
-    schedule_time DATETIME,
-    FOREIGN KEY (class_id) REFERENCES classes(class_id),
-    FOREIGN KEY (student_id) REFERENCES students(student_id),
-    FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id)
-);
-
--- 6. Payments Table
+-- 9. Payments Table (depends on invoices & students)
 CREATE TABLE payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT,
@@ -71,38 +101,19 @@ CREATE TABLE payments (
     FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id) ON DELETE CASCADE
 );
 
-
--- 7. Invoices Table
-CREATE TABLE invoices (
-    invoice_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
-    class_id INT NULL,             -- can be NULL if invoice is for a course
-    course_id INT NULL,            -- can be NULL if invoice is for a class
-    amount DECIMAL(10, 2) NOT NULL,
-    issue_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    due_date DATETIME,
-    status VARCHAR(50),
-    payment_status ENUM('Pending', 'Paid') DEFAULT 'Pending',
-
-    -- Foreign Keys
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
-    FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+-- 10. Scheduling Table (depends on classes, students, instructors)
+CREATE TABLE schedules (
+    schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+    class_id INT,
+    student_id INT,
+    instructor_id INT,
+    schedule_time DATETIME,
+    FOREIGN KEY (class_id) REFERENCES classes(class_id),
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id)
 );
 
-
-
--- 8. Communication Table (with corrected foreign keys)
-CREATE TABLE staff (
-    staff_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,   
-    role VARCHAR(50) NOT NULL,       
-    phone VARCHAR(20)
-);
-
-
+-- 11. Communications Table (depends on staff)
 CREATE TABLE communications (
     message_id INT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT,
@@ -114,37 +125,7 @@ CREATE TABLE communications (
     FOREIGN KEY (recipient_id) REFERENCES staff(staff_id)
 );
 
--- 9. Courses Table
-CREATE TABLE courses (
-    course_id INT AUTO_INCREMENT PRIMARY KEY,
-    course_name VARCHAR(100) NOT NULL,
-    price DECIMAL(10, 2),
-    duration INT,
-    description TEXT
-);
-
--- 10. Fleet Table
-CREATE TABLE fleet (
-    vehicle_id INT AUTO_INCREMENT PRIMARY KEY,
-    vehicle_name VARCHAR(100) NOT NULL,
-    vehicle_model VARCHAR(100),
-    vehicle_type VARCHAR(50),
-    location VARCHAR(255) NOT NULL
-);
-
-
--- 11. Staff Table
-
-
--- 12. Admin Dashboard Table
-CREATE TABLE dashboard_metrics (
-    metric_id INT AUTO_INCREMENT PRIMARY KEY,
-    metric_name VARCHAR(100),
-    metric_value DECIMAL(10, 2),
-    metric_date DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- 13. Student-Progress Table
+-- 12. Student Progress Table
 CREATE TABLE student_progress (
     progress_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT,
@@ -154,7 +135,15 @@ CREATE TABLE student_progress (
     FOREIGN KEY (student_id) REFERENCES students(student_id)
 );
 
+-- 13. Admin Dashboard Metrics Table
+CREATE TABLE dashboard_metrics (
+    metric_id INT AUTO_INCREMENT PRIMARY KEY,
+    metric_name VARCHAR(100),
+    metric_value DECIMAL(10, 2),
+    metric_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
+-- 14. Email Logs Table
 CREATE TABLE email_logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     recipient_email VARCHAR(255) NOT NULL,
@@ -162,3 +151,17 @@ CREATE TABLE email_logs (
     message TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+-- 15. Instructor Performance Table
+CREATE TABLE instructor_performance (
+    performance_id INT AUTO_INCREMENT PRIMARY KEY,
+    instructor_id INT NOT NULL,
+    student_id INT,  -- optional: who gave the feedback
+    class_id INT,    -- optional: feedback for which class
+    rating INT CHECK (rating BETWEEN 1 AND 5), -- 1=poor, 5=excellent
+    comments TEXT,
+    feedback_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id),
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (class_id) REFERENCES classes(class_id)
+);
+
