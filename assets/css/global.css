@@ -1,0 +1,53 @@
+/* Navbar Styles */
+.navbar {
+    background: #007bff;
+    padding: 12px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* Logo */
+.navbar .logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Nav Links */
+.navbar .nav-links {
+    list-style: none; /* remove bullets */
+    display: flex;
+    gap: 20px; /* spacing between links */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .nav-links li {
+    display: inline; /* keep inline */
+}
+
+.navbar .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.navbar .nav-links li a:hover {
+    color: #ffeb3b; /* yellow on hover */
+}
+
+/* Main content spacing */
+main {
+    margin-top: 70px; /* prevent overlap */
+}
