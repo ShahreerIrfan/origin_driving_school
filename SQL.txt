@@ -151,17 +151,17 @@ CREATE TABLE email_logs (
     message TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
--- 15. Instructor Performance Table
+-- 15. Instructor Performance Table (updated, student_id no longer has FK)
 CREATE TABLE instructor_performance (
     performance_id INT AUTO_INCREMENT PRIMARY KEY,
     instructor_id INT NOT NULL,
-    student_id INT,  -- optional: who gave the feedback
+    student_id INT,  -- now just stores an ID, not restricted by FK
     class_id INT,    -- optional: feedback for which class
     rating INT CHECK (rating BETWEEN 1 AND 5), -- 1=poor, 5=excellent
     comments TEXT,
     feedback_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id),
-    FOREIGN KEY (student_id) REFERENCES students(student_id),
     FOREIGN KEY (class_id) REFERENCES classes(class_id)
 );
+
 

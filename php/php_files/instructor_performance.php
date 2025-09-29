@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../includes/config.php");
+include("../includes/student_dashboard_sidebar.php");
 
 // Ensure only logged-in students can access
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
@@ -25,20 +26,29 @@ if ($result && $result->num_rows > 0) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_id    = $_SESSION['user_id'];
     $instructor_id = intval($_POST['instructor_id']);
-    $class_id      = !empty($_POST['class_id']) ? intval($_POST['class_id']) : NULL;
+    $class_id      = !empty($_POST['class_id']) ? intval($_POST['class_id']) : null;
     $rating        = intval($_POST['rating']);
     $comments      = trim($_POST['comments']);
 
     if ($instructor_id && $rating >= 1 && $rating <= 5) {
-        $stmt = $conn->prepare("INSERT INTO instructor_performance 
-            (instructor_id, student_id, class_id, rating, comments) 
-            VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("iiiss", $instructor_id, $student_id, $class_id, $rating, $comments);
+        if ($class_id) {
+            // Insert with class_id
+            $stmt = $conn->prepare("INSERT INTO instructor_performance 
+                (instructor_id, student_id, class_id, rating, comments) 
+                VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("iiiss", $instructor_id, $student_id, $class_id, $rating, $comments);
+        } else {
+            // Insert without class_id
+            $stmt = $conn->prepare("INSERT INTO instructor_performance 
+                (instructor_id, student_id, rating, comments) 
+                VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("iiis", $instructor_id, $student_id, $rating, $comments);
+        }
 
         if ($stmt->execute()) {
             $success = "✅ Feedback submitted successfully!";
         } else {
-            $error = "❌ Failed to submit feedback.";
+            $error = "❌ Failed to submit feedback. Error: " . $stmt->error;
         }
         $stmt->close();
     } else {
