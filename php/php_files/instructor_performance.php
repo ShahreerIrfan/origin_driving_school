@@ -2,6 +2,7 @@
 session_start();
 require_once("../includes/config.php");
 include("../includes/student_dashboard_sidebar.php");
+include("../includes/header.php");
 
 // Ensure only logged-in students can access
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {

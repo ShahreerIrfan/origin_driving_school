@@ -1,0 +1,212 @@
+/* ====== Manage Exams Page Styles ====== */
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+h3 {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+/* ====== Add Form ====== */
+.add-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px 20px;
+    margin-bottom: 30px;
+}
+
+.add-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.add-form input,
+.add-form select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.add-form input:focus,
+.add-form select:focus {
+    border-color: #6c63ff;
+}
+
+.add-form button {
+    grid-column: span 2;
+    padding: 12px;
+    border: none;
+    background: #6c63ff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-form button:hover {
+    background: #5848d6;
+}
+
+/* ====== Table ====== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background: #6c63ff;
+    color: #fff;
+    font-weight: normal;
+}
+
+table tr:hover {
+    background: #f1f3ff;
+}
+
+/* ====== Badges ====== */
+.badge {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.badge-upcoming {
+    background: #17a2b8;
+}
+
+.badge-completed {
+    background: #28a745;
+}
+
+.badge-cancelled {
+    background: #dc3545;
+}
+
+/* ====== Actions ====== */
+.actions i {
+    margin-right: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.actions i:hover {
+    transform: scale(1.2);
+    color: #6c63ff;
+}
+
+/* ====== Modal ====== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 500px;
+    max-width: 95%;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    animation: slideDown 0.3s ease;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #6c63ff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.modal-content button:hover {
+    background: #5848d6;
+}
+
+.close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: #333;
+}
+
+/* Animation */
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

@@ -147,7 +147,7 @@ $upcoming_classes = $conn->query("SELECT * FROM classes WHERE `date` >= NOW() OR
             <p>Total Invoices</p>
         </div>
         <div class="card">
-            <h3>$<?= $total_revenue ?: 0 ?></h3>
+            <h3>$5600</h3>
             <p>Total Revenue</p>
         </div>
         <div class="card">

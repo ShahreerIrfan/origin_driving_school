@@ -60,6 +60,7 @@
     <a href="manage_instructors.php">👩‍🏫 Manage Instructors</a>
     <a href="manage_classes.php">📅 Manage Classes</a>
     <a href="manage_courses.php">📚 Manage Courses</a>
+    <a href="manage_exam.php">📚 Manage Exam</a>
     <a href="manage_fleet.php">🚘 Manage Fleet</a>
     <a href="manage_branches.php">🏢 Manage Branches</a>
     <a href="manage_invoices.php">💵 Manage Invoices</a>

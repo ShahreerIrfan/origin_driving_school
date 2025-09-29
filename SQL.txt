@@ -102,16 +102,17 @@ CREATE TABLE payments (
 );
 
 -- 10. Scheduling Table (depends on classes, students, instructors)
+-- 10. Scheduling Table (updated: student_id no longer has FK)
 CREATE TABLE schedules (
     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
     class_id INT,
-    student_id INT,
+    student_id INT,        -- no longer restricted by FK
     instructor_id INT,
     schedule_time DATETIME,
     FOREIGN KEY (class_id) REFERENCES classes(class_id),
-    FOREIGN KEY (student_id) REFERENCES students(student_id),
     FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id)
 );
+
 
 -- 11. Communications Table (depends on staff)
 CREATE TABLE communications (
@@ -162,6 +163,19 @@ CREATE TABLE instructor_performance (
     feedback_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id),
     FOREIGN KEY (class_id) REFERENCES classes(class_id)
+);
+
+
+-- 16 Exams Table
+CREATE TABLE exams (
+    exam_id INT AUTO_INCREMENT PRIMARY KEY,
+    exam_name VARCHAR(100) NOT NULL,
+    exam_date DATETIME NOT NULL,
+    duration TIME NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    course_id INT,
+    status ENUM('upcoming','completed','cancelled') DEFAULT 'upcoming',
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE SET NULL
 );
 
 
